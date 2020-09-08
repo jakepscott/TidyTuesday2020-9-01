@@ -16,6 +16,7 @@ max_crop_2018 <- full_data %>%
   group_by(Country) %>% 
   slice_max(order_by = Yield,
             n = 1) 
+max_crop_2018 %>% ungroup() %>% count(Crop)
 
 #Joining
 world_2018 <- world %>% left_join(max_crop_2018,by="Code")
