@@ -54,7 +54,8 @@ full_data <- full_data %>%
 # Cleaning Columns --------------------------------------------------------
 full_data <- full_data %>% 
   mutate(Crop=str_remove(Crop,"\\(tonnes per hectare\\)"),
-         Crop=str_remove(Crop," "))
+         Crop=str_remove(Crop," "),
+         Crop=str_replace(Crop, "Cocoabeans", "Cocoa Beans"))
 
 
   
