@@ -6,7 +6,7 @@ This repo contains the code to generate a series of visualizations on crop yield
 
 
 ## Getting Started
-To run generate the plots, download the repo and run Plotting.R, which automatically sources Data_Prep.R. 
+To generate the plots, download the repo and run Plotting.R, which automatically sources Data_Prep.R. 
 
 ### Prerequisites
 
