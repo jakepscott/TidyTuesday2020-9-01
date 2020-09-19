@@ -5,43 +5,8 @@ library(gganimate)
 library(tidytext)
 windowsFonts(`Roboto Condensed` = windowsFont("Roboto Condensed"))
 
-# Getting the most popular crop by country in 2018 ------------------------
-#Getting a world sf object
-world <- ne_countries(scale = "small", returnclass = "sf") %>% rename("Country"=sovereignt,
-                                                                      "Code"=adm0_a3)
-#Getting the most common crop for 2018 for each country
-max_crop_2018 <- full_data %>% 
-  filter(Year==2018) %>% 
-  select(Code,Country,Crop,Yield) %>% 
-  group_by(Country) %>% 
-  slice_max(order_by = Yield,
-            n = 1) 
-max_crop_2018 %>% ungroup() %>% count(Crop)
+source("Data_Prep.R")
 
-#Joining
-world_2018 <- world %>% left_join(max_crop_2018,by="Code")
-
-#Plotting
-ggplot(data = world_2018) +
-  geom_sf(aes(fill=Crop)) +
-  scale_fill_brewer(palette = "Set1", 
-                    guide=guide_legend(title.position = "top",
-                                       nrow = 1)) +
-  theme_void() +
-  labs(title="The potato is king, the banana is a distant second",
-       subtitle="Most produced crop by hectare produced in 2018",
-       fill="Most produced crop by yield",
-       caption = "Plot: @jakepscott2020 | Data: Our World in Data") +
-  theme_minimal(base_family = "Roboto Condensed", base_size = 12) +
-  theme(plot.title = element_text(face = "bold", size = rel(1.2)),
-        plot.subtitle = element_text(face = "plain", size = rel(.9), color = "grey70"),
-        plot.caption = element_text(size = rel(0.9), face="italic", 
-                                    color = "grey70"),
-        plot.title.position = "plot",
-        legend.position = "bottom",
-        legend.text = element_text(size=rel(.75)),
-        legend.title = element_text(size=rel(1)))
-ggsave("pngs/World_Map.png", dpi=600)
 
 # Efficiency by Crop Over Time --------------------------------------------
 efficiency <- full_data %>% group_by(Crop,Year) %>% summarise(Yield=mean(Yield,na.rm = T)) %>% 
@@ -73,7 +38,7 @@ efficiency %>%
         legend.text = element_text(size=rel(.6)),
         legend.title = element_text(size=rel(.75)))
 
-ggsave("pngs/HeatMap.png",dpi=600)
+#ggsave("pngs/HeatMap.png",dpi=600)
 
 
 # Efficiency by Crop by Continent Over Time --------------------------------------------
@@ -127,7 +92,7 @@ efficiency_cont %>%
         legend.position = "bottom",
         legend.text = element_text(size=rel(.75)),
         legend.title = element_text(size=rel(1)))
-ggsave("pngs/LineChart.png",dpi=600)
+#ggsave("pngs/LineChart.png",dpi=600)
 
 
 
@@ -158,4 +123,42 @@ efficiency_count %>%
         legend.position = "bottom",
         legend.text = element_text(size=rel(.75)),
         legend.title = element_text(size=rel(1)))
-ggsave("pngs/ByCountry.png",dpi=600)
+#ggsave("pngs/ByCountry.png",dpi=600)
+
+# Getting the most popular crop by country in 2018 ------------------------
+#Getting a world sf object
+world <- ne_countries(scale = "small", returnclass = "sf") %>% rename("Country"=sovereignt,
+                                                                      "Code"=adm0_a3)
+#Getting the most common crop for 2018 for each country
+max_crop_2018 <- full_data %>% 
+  filter(Year==2018) %>% 
+  select(Code,Country,Crop,Yield) %>% 
+  group_by(Country) %>% 
+  slice_max(order_by = Yield,
+            n = 1) 
+max_crop_2018 %>% ungroup() %>% count(Crop)
+
+#Joining
+world_2018 <- world %>% left_join(max_crop_2018,by="Code")
+
+#Plotting
+ggplot(data = world_2018) +
+  geom_sf(aes(fill=Crop)) +
+  scale_fill_brewer(palette = "Set1", 
+                    guide=guide_legend(title.position = "top",
+                                       nrow = 1)) +
+  theme_void() +
+  labs(title="The potato is king, the banana is a distant second",
+       subtitle="Most produced crop by hectare produced in 2018",
+       fill="Most produced crop by yield",
+       caption = "Plot: @jakepscott2020 | Data: Our World in Data") +
+  theme_minimal(base_family = "Roboto Condensed", base_size = 12) +
+  theme(plot.title = element_text(face = "bold", size = rel(1.2)),
+        plot.subtitle = element_text(face = "plain", size = rel(.9), color = "grey70"),
+        plot.caption = element_text(size = rel(0.9), face="italic", 
+                                    color = "grey70"),
+        plot.title.position = "plot",
+        legend.position = "bottom",
+        legend.text = element_text(size=rel(.75)),
+        legend.title = element_text(size=rel(1)))
+#ggsave("pngs/World_Map.png", dpi=600)
